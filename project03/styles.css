@@ -1,0 +1,17 @@
+* {
+    color: #201955;
+}
+
+#nameInput {
+    background-color: #ffebcd;
+    border: 1px solid #00363f;
+    color: #00363f;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button{
+    color: #182e4a;
+    outline: auto;
+}
