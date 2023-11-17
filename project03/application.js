@@ -1,85 +1,80 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const nameInput = document.getElementById("nameInput");
+  const nameType = document.getElementById("nameType");
   const submitName = document.getElementById("submitName");
-  const greeting = document.getElementById("greeting");
+  const formType = document.getElementById("formType");
   const quizButtons = document.querySelector(".quiz-buttons");
-  const jsQuizButton = document.getElementById("jsQuizButton");
-  const leetcodeQuizButton = document.getElementById("leetcodeQuizButton");
+  const javaScriptQuizButton = document.getElementById("javaScriptQuizButton");
+  const pythonQuizButton = document.getElementById("pythonQuizButton");
 
-  /* Submit button to continue quiz */
   const submitButton = document.getElementById("submit");
   submitButton.addEventListener("click", checkAnswer);
 
-  let currQuestion = 0;
-
-  let corrAnswer;
-
-  let explanation;
-
+  /* Variables */
+  let currentQuestion = 0;
+  let correctAnswer;
+  let feedback;
+  let selectedQuiz;
   let correctAnswersCount = 0;
   let totalQuestionsAttempted = 0;
 
-  let chosenQuiz;
-
   submitName.addEventListener("click", function () {
-    const userName = nameInput.value.trim();
+    const userName = nameType.value.trim();
 
     if (userName !== "") {
-      nameInput.style.display = "none";
+      nameType.style.display = "none";
       submitName.style.display = "none";
 
-      greeting.innerHTML = `Hello, ${userName}! Please Select a Quiz to Take`;
-      greeting.style.fontSize = "22px";
-      greeting.style.background = "#427D9D";
-      greeting.style.color = "white";
-      greeting.style.borderRadius = "10px";
-
+      formType.innerHTML = `Hello, ${userName}! Please Select a Quiz`;
+      formType.style.fontSize = "22px";
+      formType.style.background = "#3923c4";
+      formType.style.color = "white";
+      formType.style.borderRadius = "10px";
       quizButtons.style.display = "block";
     }
   });
 
   /* JavaScript Quiz Button */
-  jsQuizButton.addEventListener("click", function () {
+  javaScriptQuizButton.addEventListener("click", function () {
     quizButtons.style.display = "none";
-    greeting.style.display = "none";
-    chosenQuiz = 1;
+    formType.style.display = "none";
+    selectedQuiz = 1;
     displayQuiz(1);
   });
 
-  /* python quiz button */
+  /* Python quiz button */
   pythonQuizButton.addEventListener("click", function () {
     quizButtons.style.display = "none";
-    greeting.style.display = "none";
-    chosenQuiz = 2;
+    formType.style.display = "none";
+    selectedQuiz = 2;
     displayQuiz(2);
   });
 
-  /* Quiz data for each question */
-  function displayQuiz(quizId) {
+  function displayQuiz(quizReference) {
     submitButton.style.display = "block";
     fetch(
-      `https://my-json-server.typicode.com${quizId}`
+      `https://my-json-server.typicode.com/Orlando3700/Project03_db/quizzes/${quizReference}`
     )
       .then((response) => response.json())
-      .then((data) => {
-        if (currQuestion < data.questions.length) {
-          corrAnswer = data.questions[currQuestion].correctAnswer;
-          explanation = data.questions[currQuestion].explanation;
-          renderQuizView(data.questions[currQuestion]);
+      .then((data) => 
+	{
+        if (currentQuestion < data.questions.length) {
+          correctAnswer = data.questions[currentQuestion].correctAnswer;
+          feedback = data.questions[currentQuestion].feedback;
+          renderQuizView(data.questions[currentQuestion]);
         } else {
           renderEndOfQuiz();
         }
-      });
-  }
+    });
+}
 
   function renderQuizView(questionData) {
-    const source = document.getElementById("quiz_view").innerHTML;
-    const template = Handlebars.compile(source);
-    const html = template({
+    const quizElement = document.getElementById("quiz-view").innerHTML;
+    const formView = Handlebars.compile(quizElement);
+    const html = formView({
       ...questionData,
       isTextQuestion: questionData.type === "text",
     });
-    document.querySelector("#main_view").innerHTML = html;
+    document.querySelector("#main-view").innerHTML = html;
     document.getElementById("scoreboard").style.display = "block";
   }
 
@@ -89,68 +84,66 @@ document.addEventListener("DOMContentLoaded", function () {
     totalQuestionsAttempted++;
     updateScoreboard();
 
-    const source = document.getElementById("correct_view").innerHTML;
-    const template = Handlebars.compile(source);
-    const html = template({});
-    document.querySelector("#main_view").innerHTML = html;
+    const quizElement = document.getElementById("correct-view").innerHTML;
+    const formView = Handlebars.compile(quizElement);
+    const html = formView({});
+    document.querySelector("#main-view").innerHTML = html;
 
     setTimeout(() => {
-      currQuestion++;
-      displayQuiz(chosenQuiz);
-    }, 1000);
-  }
+      currentQuestion++;
+      displayQuiz(selectedQuiz);
+    }, 1000);  }
 
   function renderWrongView() {
     submitButton.style.display = "none";
     totalQuestionsAttempted++;
     updateScoreboard();
 
-    const source = document.getElementById("wrong_view").innerHTML;
-    const template = Handlebars.compile(source);
-    const html = template({ explanation });
-    document.querySelector("#main_view").innerHTML = html;
+    const quizElement = document.getElementById("incorrect-view").innerHTML;
+    const formView = Handlebars.compile(quizElement);
+    const html = formView({ feedback });
+    document.querySelector("#main-view").innerHTML = html;
 
     document
       .getElementById("nextQuestion")
       .addEventListener("click", function () {
-        currQuestion++;
-        displayQuiz(chosenQuiz);
+        currentQuestion++;
+        displayQuiz(selectedQuiz);
       });
   }
 
   function renderEndOfQuiz() {
     submitButton.style.display = "none";
-    const percentageScore =
-      (correctAnswersCount / totalQuestionsAttempted) * 100;
+    const percentageScore = (correctAnswersCount / totalQuestionsAttempted) * 100;
 
     let endMessage;
     if (percentageScore >= 80) {
       endMessage = `Congratulations ${
-        nameInput.value
+        nameType.value
       }! You passed the quiz with a score of ${percentageScore.toFixed(2)}%.`;
     } else {
       endMessage = `Sorry ${
-        nameInput.value
+        nameType.value
       }, you failed the quiz with a score of ${percentageScore.toFixed(2)}%.`;
     }
 
-    const source = document.getElementById("end_view").innerHTML;
-    const template = Handlebars.compile(source);
-    const html = template({ endMessage });
-    document.querySelector("#main_view").innerHTML = html;
+    const quizElement = document.getElementById("end-view").innerHTML;
+    const formView = Handlebars.compile(quizElement);
+    const html = formView({ endMessage });
+    document.querySelector("#main-view").innerHTML = html;
 
     document
       .getElementById("retakeQuiz")
       .addEventListener("click", function () {
-        currQuestion = 0;
+        currentQuestion = 0;
         correctAnswersCount = 0;
         totalQuestionsAttempted = 0;
         updateScoreboard();
-        displayQuiz(chosenQuiz);
+        displayQuiz(selectedQuiz);
       });
 
     document
-      .getElementById("returnToMain")
+      .getElementById("returnToMainPage")
       .addEventListener("click", function () {
         location.reload();
       });
@@ -167,11 +160,11 @@ document.addEventListener("DOMContentLoaded", function () {
       'input[type="radio"]:checked'
     );
 
-    if (selectedAnswer && selectedAnswer.value === corrAnswer) {
+    if (selectedAnswer && selectedAnswer.value === correctAnswer) {
       renderCorrectView();
     } else if (document.getElementById("textAnswer")) {
       const textAnswer = document.getElementById("textAnswer").value.trim();
-      if (textAnswer.toLowerCase() === corrAnswer.toLowerCase()) {
+      if (textAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
         renderCorrectView();
       } else {
         renderWrongView();
