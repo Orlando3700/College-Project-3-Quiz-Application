@@ -2,54 +2,48 @@
 <html lang="en">
   <head>
     <title>Project 03 SPA</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css"/>
     <link
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-    <script src="index.js"></script>
+    <script src="application.js"></script>
   </head>
   <body>
     <div class="container">
-      <h1 class="text-center mt-5">Programming Quiz Application</h1>
-      <h2 class="text-center mt-3"> Orlando Fernand </h2>
-      <div class="text-center mt-5">
+      <h1 class="text-center">Quiz Application</h1>
+      <h2 class="text-center"> Orlando Fernand </h2>
+      <div class="text-center">
         <input
           type="text"
-          id="nameInput"
+          id="nameType"
           class="form-control"
-          placeholder="Enter your name"
-        />
+          placeholder="Please enter your name"/>
         <button id="submitName" class="btn mt-5">Select a Quiz</button>
       </div>
 
-      <div id="greeting" class="text-center mt-4"></div>
+      <div id="formType" class="text-center mt-4"></div>
 
-      <!-- Choosing the quiz -->
-      <div class="text-center mt-4">
+      <!-- Choosing the quiz -->      
+    <div class="text-center mt-4">
         <div class="form-check quiz-buttons" style="display: none">
-          <button id="jsQuizButton" class="btn" value="JavaScript">
-            JavaScript
+          <button id="javaScriptQuizButton" class="btn" value="JavaScript"> JavaScript
           </button>
-          <button id="pythonQuizButton" class="btn" value="python">
-            Python
+          <button id="pythonQuizButton" class="btn" value="Python"> Python
           </button>
         </div>
       </div>
 
-      <div id="main_view">
+      <div id="main-view">
       
-        <!-- Show view -->
       </div>
       <button
         id="submit"
-        class="text-center btn submit-button mt-5"
-        style="display: none"
-      >
+        class="text-center btn submit-button mt-4"
+        style="display: none" >
         Submit
       </button>
     </div>
@@ -60,76 +54,80 @@
       style="
         display: none;
         border: 2px solid #5442f4;
-        padding: 15px;
-        border-radius: 5px;
+        border-radius: 6px;
+        padding: 16px;       
         background-color: #f8fafa;
-        margin-top: 20px;"   >
+        margin-top: 20px;">
         
       <h3 style="color: #4285f4">Scoreboard</h3>
       <p
         id="correctAnswers"
-        style="font-size: 18px; color: #0d6efd; font-weight: bold"      >
+        style="font-size: 17px; color: #0d6efd;">
         0 / 0
       </p>
     </div>
   </body>
   
-  <!-- Quiz Template -->
-  <script id="quiz_view" type="text/x-handlebars-template">
+  <!-- Format for the quiz -->
+  <script id="quiz-view" type="text/x-handlebars-template">
     <div
-      style="background-color: #FFEBCD; color: #434a85; padding: 20px; border-radius: 20px;"    >
+      style="background-color: #FFEBCD; color: #434a85; padding: 20px; border-radius: 20px;">
  
      <h2>{{question}}</h2>
-      {{#if isTextQuestion}}
-        <input class="mt-3" type="text" id="textAnswer" />
-      {{else}}
-        <ul class="quiz-options mt-3" style="list-style: none;">
-          {{#each options}}
+      {{#if isTextQuestion
+	}}
+        <input class="mt-4" type="text" id="textAnswer" />
+      {{else
+	}}
+        <ul class="quiz-options mt-4" style="list-style: none;">
+          {{#each options
+		}}
             <li>
               <label>
                 <input type="radio" name="question{{id}}" value="{{this}}" />
-                {{this}}
+                {{this
+		}}
               </label>
             </li>
-          {{/each}}
+          {{/each
+	}}
         </ul>
-      {{/if}}
+      {{/if
+	}}
     </div>
   </script>
 
-  <!-- Template for correct answer -->
-  <script id="correct_view" type="text/x-handlebars-template">
+  <!-- Format for correct answer -->
+  <script id="correct-view" type="text/x-handlebars-template">
     <div class="container text-center mt-5 correct-answer">
       <div class="alert alert-success" role="alert">
         <h1 class="display-4">Brilliant!</h1>
-        <p class="lead">You got it right. Keep up the good work!</p>
+        <p class="lead">Your answer is correct!</p>
       </div>
     </div>
   </script>
 
-  <!-- Template for incorrect answer -->
-  <script id="wrong_view" type="text/x-handlebars-template">
+  <!-- Format for incorrect answer -->
+  <script id="incorrect-view" type="text/x-handlebars-template">
     <div class="container text-center mt-5 wrong-answer">
       <div class="alert alert-danger" role="alert">
-        <h1 class="display-4">Oops!</h1>
-        <p class="lead">Sorry, that's not correct. Keep trying!</p>
+        <h1 class="display-4">Wrong!</h1>
+        <p class="lead">Sorry, your answer is incorrect. </p>
         <p class="explanation">{{explanation}}</p>
         <button id="nextQuestion" class="btn">Next Question</button>
       </div>
     </div>
   </script>
 
-  <!-- Template for the end of the quiz -->
-  <script id="end_view" type="text/x-handlebars-template">
+  <!-- Format for the end of the quiz -->
+  <script id="end-view" type="text/x-handlebars-template">
     <div
-      style="background-color: #FFEBCD; color: #434a85; padding: 20px; border-radius: 20px;"
-    >
+      style="background-color: #FFEBCD; color: #434a85; padding: 20px; border-radius: 20px;">
       <h1>Quiz Completed!</h1>
       <p>{{endMessage}}</p>
       <div class="text-center mt-3">
         <button id="retakeQuiz" class="btn btn-primary">Retake Quiz</button>
-        <button id="returnToMain" class="btn btn-secondary ml-3">Return to Main
-          Page</button>
+        <button id="returnToMainPage" class="btn btn-secondary ml-3">Return to the Main Page</button>
       </div>
     </div>
   </script>
