@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function displayQuiz(quizReference) {
     submitButton.style.display = "block";
     fetch(
-      `https://my-json-server.typicode.com/Orlando3700/Project03_db/quizzes/${quizReference}`
+      `https://my-json-server.typicode.com/Orlando3700/College-Project-03-Database-JSON/quizzes/${quizReference}`
     )
       .then((response) => response.json())
       .then((data) => 
